@@ -31,40 +31,7 @@ F3 = st.image([])
 F4 = st.image([])
 
 
-while run:
-    camera = cv2.VideoCapture("8.mp4")
-    _, frame1 =camera.read()
-    _, frame2= camera.read()
-    frame1 = cv2.cvtColor(frame1, cv2.COLOR_BGR2RGB)
-    
-    FRAME_WINDOW.image(frame1)
-    diff = cv2.absdiff(frame1, frame2)
-    gray = cv2.cvtColor(diff, cv2.COLOR_BGR2GRAY)
-    blur = cv2.GaussianBlur(gray, (9, 9), 0)
-    edges = cv2.Canny(blur, threshold1=30, threshold2=150)
-    _, thresh = cv2.threshold(blur, 20, 255, cv2.THRESH_BINARY)
-    dilated = cv2.dilate(thresh, None, iterations=3)
-    contours, _ = cv2.findContours(dilated,cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-    for contour in contours:
-        (x, y, w, h) = cv2.boundingRect(contour)
-        area = cv2.contourArea(contour)
-        pothole = area
-        if cv2.contourArea(contour) < 10000:
-            continue
-        cv2.rectangle(frame1, (x, y), (x+w, y+h), (0 ,255, 0), 2)
-        cv2.approxPolyDP(contour,0.01*cv2.arcLength(contour,True),True)
-        print('pothole',round(pothole,2))
-        cv2.putText(frame1, f'pothole:{pothole}', (x, y), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 255), 2)
-        #cv2.putText(frame1, "Status : {}".format('potholes'), (10,20), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 3)
-        #cv2.drawContours(frame1, contours, -1, (0, 255, 0), 2)
-        #print("Number of contours in image:",len(contours))
-        #st.image("dilated", dilated)
-        F4.image(dilated)   
-    F1.image(frame1)
-    F2.image(thresh)
-    F3.image(edges)
-    frame1=frame2
-    ret, frame2=camera.read()
+
     
 df = pd.read_csv("mlppa.csv")
 
