@@ -23,8 +23,7 @@ st.markdown("---")
 #st.caption('HOSTED BY CHAITANYA 201801330017')
 
 model_path='pothole.tflite'
-st.title("Webcam Live Feed")
-run = st.checkbox('Run')
+
 FRAME_WINDOW = st.image([])
 F1 = st.image([])
 F2 = st.image([])
