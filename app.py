@@ -5,63 +5,22 @@ import os
 import numpy as np
 import PIL
 import pandas as pd
-from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LinearRegression
- 
-from sklearn.metrics import mean_absolute_error, mean_squared_error
-hide_streamlit_style = """
-            <style>
-            #MainMenu {visibility: hidden;}
-            footer {visibility: hidden;}
-            </style>
-            """
-st.markdown(hide_streamlit_style, unsafe_allow_html=True)
+
 ## Page Title
-#st.set_page_config(page_title = "Cats vs Dogs Image Classification")
-st.title("POTHOLE DETECTION")
-st.markdown("---")
-#st.caption('HOSTED BY CHAITANYA 201801330017')
-
-model_path='pothole.tflite'
-
-FRAME_WINDOW = st.image([])
-F1 = st.image([])
-F2 = st.image([])
-F3 = st.image([])
-F4 = st.image([])
+#st.set_page_config(page_title = "Food Classification")
+#st.title("FOOD CLASSIFICATION")
+#st.markdown("------")
+st.set_page_config(page_title = "Food Classification")
+st.title("FOOD Classification")
+st.markdown("------")
 
 
-
-    
-df = pd.read_csv("mlppa.csv")
-
-y = df['Impulse'].values.reshape(-1, 1)
-X = df['Area'].values.reshape(-1, 1)
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2)
-SEED = 42
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state = SEED)
-regressor = LinearRegression()
-regressor.fit(X_train, y_train)
-def calc(slope, intercept, Area):
-    return slope*Area+intercept
-
-score = calc(regressor.coef_, regressor.intercept_, 9.5)
-
-score = regressor.predict([[9.5]])
-
-y_pred = regressor.predict(X_test)
-
-mae = mean_absolute_error(y_test, y_pred)
-mse = mean_squared_error(y_test, y_pred)
-rmse = np.sqrt(mse)
-print(f'Mean absolute error: {mae:.2f}')
-print(f'Mean squared error: {mse:.2f}')
-print(f'Root mean squared error: {rmse:.2f}')
+model_path="foodc.tflite"
 
 
 
 # Load the labels into a list
-classes = ['pothole', 'road_with_cracks','pothole_with_water','pothle with water','pothole with water','pothole_with_ water','pothole _with_ water','pohole with water','group of potholes','group_of_potholes','Marked_Speedbreaker','Unmarked_Speedbreaker','cracks']
+classes = [ 'dal_makhani','dhokla','fried_rice','idli','jalebi','kaathi_rolls','kadai_panner','masala_dosa','kulfi','pizza','samosa','.']
 #label_map = model.model_spec.config.label_map
 #for label_id, label_name in label_map.as_dict().items():
  # classes[label_id-1] = label_name
@@ -138,6 +97,7 @@ def run_odt_and_draw_results(image_path, interpreter, threshold=0.3):
   for obj in results:
     # Convert the object bounding box from relative coordinates to absolute 
     # coordinates based on the original image resolution
+    #x,y,w,h = cv2.boundingRect(cnt)
     ymin, xmin, ymax, xmax = obj['bounding_box']
     xmin = int(xmin * original_image_np.shape[1])
     xmax = int(xmax * original_image_np.shape[1])
@@ -145,12 +105,21 @@ def run_odt_and_draw_results(image_path, interpreter, threshold=0.3):
     ymax = int(ymax * original_image_np.shape[0])
     w=xmax-xmin
     h=ymax-ymin
+    
+    #st.write(AreaofRectangle)
     # Find the class index of the current object
     class_id = int(obj['class_id'])
-    st.write(classes[class_id])
-    #st.write(classes)
+    n=278
+    m=152
+    o=163
+    p=39
+    q=150
+    r=197
+    st.info(classes[class_id])
+    
+    
     #st.write(class_id)
-   
+    
 
     # Draw the bounding box and label on the image
     color = [int(c) for c in COLORS[class_id]]
@@ -162,7 +131,7 @@ def run_odt_and_draw_results(image_path, interpreter, threshold=0.3):
         cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
 
   # Return the final image
-  original_uint8 = original_image_np.astype(np.uint8)
+  original_uint8 = original_image_np.astype(np.uint8)  
   return original_uint8
 
 
@@ -186,14 +155,10 @@ if uploaded_file is not None:
         threshold=DETECTION_THRESHOLD
     )
 
-    # Show the detection resulthgf
+    # Show the detection result
     st.image(detection_result_image)
-    
-    
 
  
-
-
 
 
 
